@@ -67,6 +67,10 @@
         </div>
 
         <!-- CAROUSEL -->
+        <div class="carousel-heading">
+          <h3>Sfoglia i Contenuti</h3>
+          <p>Articoli, ricette e gallerie che cambiano ogni 15 secondi</p>
+        </div>
         <div class="carousel-section">
           <div class="carousel-track" id="carousel-track"></div>
         </div>
@@ -152,15 +156,27 @@
           <p class="section-desc">La storia di Pino Soprano</p>
         </div>
         <div class="about-content" id="about-content">
+          <div class="about-hero">
+            <img src="assets/blog/pagine_su-di-me/anatroccolo1.jpg" alt="Pino Soprano" loading="lazy">
+            <h3>Pino Soprano</h3>
+            <div class="about-subtitle">Classe 1965</div>
+          </div>
+
           <div class="about-quote">
             "La neutralita aiuta sempre l'oppressore, mai la vittima.<br>
             Il silenzio incoraggia sempre il torturatore, mai il torturato."
           </div>
+
           <div id="about-text"></div>
-          <hr class="divider">
-          <p style="color:var(--text-muted); font-size:0.85rem; text-align:center;">
-            Nato nel 1965 &bull; Assistente sociale &bull; Filosofo &bull; Pianista &bull; Cuoco naturale
-          </p>
+
+          <div class="about-tags">
+            <span>Assistente Sociale</span>
+            <span>Filosofo</span>
+            <span>Pianista</span>
+            <span>Cuoco Naturale</span>
+            <span>Non-violento</span>
+            <span>Amante degli Animali</span>
+          </div>
         </div>
       </div>
     </section>
@@ -215,7 +231,7 @@
         <a href="https://pinosoprano.wordpress.com" target="_blank">Blog Originale</a>
         <a href="https://www.pinosoprano.it" target="_blank">Sito Originale</a>
       </div>
-      <p>Pino Soprano &mdash; I ricordi di una vita &bull; 2010&ndash;2013</p>
+      <p>Pino Soprano &bull; 2010&ndash;2013</p>
     </div>
   </footer>
 
@@ -233,15 +249,13 @@
 
   const CAT_DISPLAY = {"filosofia-religione": "Filosofia & Religione", "informazione": "Informazione", "alimentazione": "Alimentazione", "amore-sensibilita": "Amore & Sensibilita", "palestina-israele": "Palestina-Israele", "poesia": "Poesia", "ambiente-animali": "Ambiente & Animali", "musica": "Musica", "senza-categoria": "Altro"};
 
-  const ABOUT_HTML = `<img src="https://pinosoprano.wordpress.com/wp-content/uploads/2011/04/anatroccolo1.jpg?w=300&amp;h=225" alt="" loading="lazy">
+  const ABOUT_HTML = `<p>Classe 1965, ho studiato Assistente Sociale, strimpello un po' il Pianoforte, non appartengo ad alcuna religione, ho fatto studi classici, ho letto molta filosofia e tuttora la seguo con molto interesse.</p>
 
-<p><strong>Classe 1965, ho studiato Assistente Sociale, strimpello un pò il Pianoforte, non appartengo ad alcuna religione, ho fatto studi classici, ho letto molta filosofia e tuttora la seguo con molto interesse.</strong></p>
+<p>Sono tendenzialmente un non-violento, caratterialmente sembro un orso ma fondamentalmente sono un agnellino, combatto la violenza gratuita, i luoghi comuni, la poca considerazione che si ha del prossimo e la scarsa importanza che si da' alla vita ed agli esseri viventi. Mi commuovo alla sensibilita' dei bambini, agli animali innocenti, ad un tappeto di archi, alla Nona di Beethoven, al Rigoletto, alla Forza del Destino, ad alcune canzoni classiche napoletane...</p>
 
-<p><strong>Sono tendenzialmente un non-violento, caratterialmente sembro un orso ma fondamentalmente sono un agnellino, combatto la violenza gratuita, i luoghi comuni, la poca considerazione che si ha del prossimo e la scarsa importanza che si dà alla vita ed agli esseri viventi. Mi commuovo alla sensibilità dei bambini, agli animali innocenti, ad un tappeto di archi, alla Nona di Beethoven, al Rigoletto, alla Forza del Destino, ad alcune canzoni classiche napoletane…</strong></p>
+<p>Intimamente gioisco quando conosco persone sensibili, quando capitano belle cose alle persone che stimo e voglio bene, quando immagino un futuro senza crudelta', ...</p>
 
-<p><strong>Intimamente gioisco quando conosco persone sensibili, quando capitano belle cose alle persone che stimo e voglio bene, quando immagino un futuro senza crudeltà, …</strong></p>
-
-<p><strong>Intimamente mi rattristo quando conosco persone rozze o poco sensibili, quando vedo soffrire gli uomini, gli animali, il mondo intero…</strong></p>`;
+<p>Intimamente mi rattristo quando conosco persone rozze o poco sensibili, quando vedo soffrire gli uomini, gli animali, il mondo intero...</p>`;
 
   // ============================================
   // QUOTES (rotating every 15s)
@@ -456,6 +470,18 @@
   // ============================================
   // ARTICLES
   // ============================================
+  const CAT_COLORS = {
+    "filosofia-religione": "#7b68ae",
+    "informazione": "#3a8fb7",
+    "alimentazione": "#5a9e6f",
+    "amore-sensibilita": "#c75b7a",
+    "palestina-israele": "#b8860b",
+    "poesia": "#c49a6c",
+    "ambiente-animali": "#2e8b57",
+    "musica": "#cd5c5c",
+    "senza-categoria": "#999"
+  };
+
   function renderCategoryTabs() {
     const counts = {};
     ARTICLES.forEach(a => {
@@ -463,10 +489,10 @@
     });
 
     const tabs = document.getElementById('category-tabs');
-    let html = `<button class="cat-tab active" onclick="setCategory('all')">Tutti <span class="count">(${ARTICLES.length})</span></button>`;
+    let html = `<button class="cat-tab active" data-cat="all" onclick="setCategory('all')">Tutti <span class="count">(${ARTICLES.length})</span></button>`;
     Object.entries(counts).sort((a,b) => b[1]-a[1]).forEach(([cat, count]) => {
       const display = CAT_DISPLAY[cat] || cat;
-      html += `<button class="cat-tab" onclick="setCategory('${cat}')">${display} <span class="count">(${count})</span></button>`;
+      html += `<button class="cat-tab" data-cat="${cat}" onclick="setCategory('${cat}')">${display} <span class="count">(${count})</span></button>`;
     });
     tabs.innerHTML = html;
   }
@@ -474,15 +500,24 @@
   function setCategory(cat) {
     currentCategory = cat;
     document.querySelectorAll('.cat-tab').forEach(t => {
-      t.classList.toggle('active',
-        (cat === 'all' && t.textContent.startsWith('Tutti')) ||
-        t.textContent.includes(CAT_DISPLAY[cat] || '___'));
+      t.classList.toggle('active', t.dataset.cat === cat);
     });
     renderArticles();
   }
 
   function filterArticles() {
     renderArticles();
+  }
+
+  function getArticleThumb(a) {
+    const content = a.content || '';
+    // Check for <img> tags
+    const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/);
+    if (imgMatch) return imgMatch[1];
+    // Check for markdown images ![alt](url)
+    const mdMatch = content.match(/!\[[^\]]*\]\(([^)]+)\)/);
+    if (mdMatch) return mdMatch[1];
+    return null;
   }
 
   function renderArticles() {
@@ -501,20 +536,56 @@
       return;
     }
 
-    grid.innerHTML = filtered.map((a, i) => `
-      <div class="article-card fade-in" style="animation-delay:${Math.min(i*30, 300)}ms" onclick="openArticle(${ARTICLES.indexOf(a)})">
-        <span class="date">${formatDate(a.date)}</span>
-        <span class="title">${escapeHtml(a.title)}</span>
-        <span class="cat-badge">${(CAT_DISPLAY[a.category] || a.category).split('&')[0].trim()}</span>
-      </div>
-    `).join('');
+    const catIcons = {
+      "filosofia-religione": "\u{1f4d6}",
+      "informazione": "\u{1f4f0}",
+      "alimentazione": "\u{1f331}",
+      "amore-sensibilita": "\u{2764}",
+      "palestina-israele": "\u{1f54a}",
+      "poesia": "\u{270d}",
+      "ambiente-animali": "\u{1f33f}",
+      "musica": "\u{1f3b9}",
+      "senza-categoria": "\u{1f4dd}"
+    };
+
+    grid.innerHTML = filtered.map((a, i) => {
+      const thumb = getArticleThumb(a);
+      const color = CAT_COLORS[a.category] || '#8b5e3c';
+      const catName = (CAT_DISPLAY[a.category] || a.category).split('&')[0].trim();
+      const icon = catIcons[a.category] || '';
+      // Clean title: remove trailing "..."
+      let title = a.title.replace(/\.{3,}$/, '').replace(/…$/, '').trim();
+
+      return `<div class="article-card fade-in" style="animation-delay:${Math.min(i*20, 200)}ms" onclick="openArticle(${ARTICLES.indexOf(a)})">
+        ${thumb
+          ? `<img class="article-thumb" src="${thumb}" alt="" loading="lazy" onerror="this.outerHTML='<div class=article-thumb-placeholder>${icon}</div>'">`
+          : `<div class="article-thumb-placeholder">${icon}</div>`}
+        <div class="article-body">
+          <span class="cat-badge" style="background:${color}">${catName}</span>
+          <span class="title">${escapeHtml(title)}</span>
+          <span class="date">${formatDate(a.date)}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function fixMarkdownImages(html) {
+    // Convert ![alt](url) and [!Immagine](url) to <img>
+    return html.replace(/!?\[!?([^\]]*)\]\(([^)]+)\)/g, function(match, alt, url) {
+      if (url.match(/\.(jpg|jpeg|png|gif|webp)$/i) || url.includes('assets/')) {
+        return '<img src="' + url + '" alt="' + alt + '" style="max-width:100%;border-radius:4px;margin:1rem 0" loading="lazy">';
+      }
+      return match;
+    });
   }
 
   function openArticle(index) {
     const a = ARTICLES[index];
     document.getElementById('article-meta').textContent = `${formatDate(a.date)} \u2014 ${(a.categories||[]).join(', ')}`;
     document.getElementById('article-title').textContent = a.title;
-    document.getElementById('article-content').innerHTML = a.content || '<p style="color:var(--text-muted);font-style:italic">Contenuto non disponibile. <a href="' + a.link + '" target="_blank">Leggi sul sito originale</a></p>';
+    let content = a.content || '<p style="color:var(--text-muted);font-style:italic">Contenuto non disponibile. <a href="' + a.link + '" target="_blank">Leggi sul sito originale</a></p>';
+    content = fixMarkdownImages(content);
+    document.getElementById('article-content').innerHTML = content;
     document.getElementById('article-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
