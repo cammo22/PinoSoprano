@@ -681,17 +681,15 @@ a:hover {
   border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
-  transition: opacity 1.2s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0;
-  position: relative;
-}
-
-.carousel-item.visible {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   opacity: 1;
+  position: relative;
+  animation: cardPop 0.3s ease;
 }
 
-.carousel-item.dissolving {
-  opacity: 0;
+@keyframes cardPop {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 .carousel-item:hover {
@@ -843,7 +841,7 @@ a:hover {
   border: 1px solid var(--border-light);
 }
 
-/* Carousel section title */
+/* Carousel section title + timer */
 .carousel-heading {
   text-align: center;
   margin: 2.5rem 0 0.5rem;
@@ -859,6 +857,49 @@ a:hover {
   font-size: 0.85rem;
   color: var(--text-muted);
   margin-top: 0.3rem;
+}
+.carousel-timer-bar {
+  width: 120px;
+  height: 3px;
+  background: var(--border-light);
+  border-radius: 2px;
+  margin: 0.7rem auto 0;
+  overflow: hidden;
+}
+.carousel-timer-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  width: 100%;
+  transform-origin: left;
+  transition: none;
+}
+
+/* Mobile floating back button */
+.nav-back-mobile {
+  display: none;
+  position: fixed;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-dark);
+  color: var(--accent-warm);
+  border: 1px solid rgba(196, 154, 108, 0.3);
+  border-radius: 24px;
+  padding: 0.55rem 1.4rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  z-index: 200;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.nav-back-mobile:hover { opacity: 0.85; transform: translateX(-50%) translateY(-2px); }
+
+@media (max-width: 768px) {
+  .nav-back { display: none !important; }
+  .nav-back-mobile.show { display: block; }
 }
 
 /* === FOOTER === */

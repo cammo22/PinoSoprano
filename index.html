@@ -69,7 +69,8 @@
         <!-- CAROUSEL -->
         <div class="carousel-heading">
           <h3>Sfoglia i Contenuti</h3>
-          <p>Articoli, ricette e gallerie che cambiano ogni 15 secondi</p>
+          <p>Articoli, ricette e gallerie</p>
+          <div class="carousel-timer-bar"><div class="carousel-timer-fill" id="carousel-timer-fill"></div></div>
         </div>
         <div class="carousel-section">
           <div class="carousel-track" id="carousel-track"></div>
@@ -223,6 +224,9 @@
     <button class="lb-nav lb-next" onclick="navLightbox(1)">&#10095;</button>
   </div>
 
+  <!-- MOBILE BACK BUTTON -->
+  <button class="nav-back-mobile" id="nav-back-mobile" onclick="goBack()">&#8592; Indietro</button>
+
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container">
@@ -311,9 +315,12 @@
     document.querySelectorAll('.main-nav a').forEach(a => {
       a.classList.toggle('active', a.dataset.section === section);
     });
-    document.getElementById('hero').style.display = section === 'home' ? '' : 'none';
+    const isHome = section === 'home';
+    document.getElementById('hero').style.display = isHome ? '' : 'none';
     document.querySelector('.main-nav').classList.remove('open');
-    document.getElementById('nav-back').style.display = section === 'home' ? 'none' : 'flex';
+    document.getElementById('nav-back').style.display = isHome ? 'none' : 'flex';
+    const mobileBack = document.getElementById('nav-back-mobile');
+    if (mobileBack) mobileBack.classList.toggle('show', !isHome);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -441,30 +448,33 @@
     return '';
   }
 
+  const CAROUSEL_DURATION = 15000;
+  let carouselTimerStart = null;
+  let carouselRafId = null;
+
   function cycleCarousel() {
     const track = document.getElementById('carousel-track');
     if (!track) return;
+    const items = getRandomItems(8);
+    track.innerHTML = items.map(renderCarouselItem).join('');
+    startCarouselTimer();
+  }
 
-    // Get current items
-    const currentItems = track.querySelectorAll('.carousel-item');
+  function startCarouselTimer() {
+    carouselTimerStart = performance.now();
+    if (carouselRafId) cancelAnimationFrame(carouselRafId);
 
-    // Dissolve current items
-    currentItems.forEach(item => {
-      item.classList.remove('visible');
-      item.classList.add('dissolving');
-    });
-
-    // After dissolve, replace with new items
-    setTimeout(() => {
-      const items = getRandomItems(8);
-      track.innerHTML = items.map(renderCarouselItem).join('');
-
-      // Stagger the appearance
-      const newItems = track.querySelectorAll('.carousel-item');
-      newItems.forEach((item, i) => {
-        setTimeout(() => item.classList.add('visible'), 150 * i);
-      });
-    }, 1200);
+    function tick(now) {
+      const fill = document.getElementById('carousel-timer-fill');
+      if (!fill) return;
+      const elapsed = now - carouselTimerStart;
+      const pct = Math.max(0, 1 - elapsed / CAROUSEL_DURATION);
+      fill.style.transform = `scaleX(${pct})`;
+      if (pct > 0) {
+        carouselRafId = requestAnimationFrame(tick);
+      }
+    }
+    carouselRafId = requestAnimationFrame(tick);
   }
 
   // ============================================
@@ -736,7 +746,7 @@
     // Start carousel
     carouselPool = buildCarouselPool();
     cycleCarousel();
-    carouselInterval = setInterval(cycleCarousel, 15000);
+    carouselInterval = setInterval(cycleCarousel, CAROUSEL_DURATION);
   });
   </script>
 
