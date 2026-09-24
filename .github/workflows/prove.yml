@@ -1,0 +1,41 @@
+# Prove automatiche del sito di Pino Soprano (metodo DaProd).
+#
+# Su ogni PR e su ogni push su main apre il sito in Chromium (computer e telefono) e verifica
+# contenuti originali, visite guidate (citazioni testuali), flusso infinito, pianoforte, club e fuga.
+# Le foto delle schermate restano fra gli artefatti del workflow.
+name: Prove
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prove-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: 20 }
+      - name: Playwright e Chromium
+        run: |
+          npm i --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Prove nel browser
+        run: node test/prove.mjs
+      - name: Foto delle schermate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: schermate
+          path: test/.out/
+          if-no-files-found: ignore
