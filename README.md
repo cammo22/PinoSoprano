@@ -6,6 +6,7 @@
 [![Prove](https://img.shields.io/github/actions/workflow/status/cammo22/PinoSoprano/prove.yml?style=flat-square&label=prove)](.github/workflows/prove.yml)
 [![Changelog](https://img.shields.io/badge/📅_Changelog-mantenuto-ffab00?style=flat-square)](CHANGELOG.md)
 [![Nessuna dipendenza](https://img.shields.io/badge/JavaScript-zero_dipendenze-f7df1e?style=flat-square&logo=javascript&logoColor=black)](js/)
+[![Discord](https://img.shields.io/badge/Discord-DaProd-5865F2?logo=discord&logoColor=white)](https://discord.gg/Njs52aacwq)
 
 > **Filosofo, pianista, cuoco naturale. «Classe 1965».**
 
